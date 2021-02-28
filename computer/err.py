@@ -1,36 +1,20 @@
-class _Logger_ERR_HDN:
-	def __init__(self,filename=None,code=None,fxist=None,fexist=None):
-		if filename: _Logger_ERR.file(filename)
-		if code: _Logger_ERR.code(code)
-		if fxist: _Logger_ERR.efile(fxist)
-		if fexist: _Logger_ERR.exfile(fexist)
+# exceptions
+class Computer_ValueError(Exception):
+	pass
 
-class _Logger_ERR:
-	def code(x):
-		try:
-			from .__init__ import _ltype
-			tmp=_ltype[x]
-		except:
-			from .__init__ import Logger_CodeError
-			raise Logger_CodeError(f'Logger_CodeError: invalid log code for `{x}`')
-	
-	def file(fname):
-		from .api import Logger_UTILS
-		tmp=Logger_UTILS.checkf(fname)
-		if tmp == False: 
-			from .__init__ import Logger_FileError
-			raise Logger_FileError(f'Logger_FileError: invalid file format for `{fname}`')
-	
-	def efile(fname):
-		from .api import Logger_UTILS
-		tmp=Logger_UTILS.fexist(fname)
-		if not tmp:
-			from .__init__ import Logger_FileError
-			raise Logger_FileError(f'Logger_FileError: File `{fname}` did not exists')
-	
-	def exfile(fname):
-		from .api import Logger_UTILS
-		tmp=Logger_UTILS.fexist(fname)
-		if tmp:
-			from .__init__ import Logger_FileError
-			raise Logger_FileError(f'File `{fname}` already exists')
+class Computer_TypeError(Exception):
+	pass
+
+def prs_int(x):
+	try:
+		x = int(x)
+	except:
+		raise Computer_TypeError(f'Invalid binary value for `{x}`')
+	if x > 1 or x < 0: raise Computer_ValueError('Value can\'t be lower than 0 or higher than 1')
+
+def Handler(func):
+	def wrp(*args):
+		for a in args:
+			prs_int(a)
+		return func(*args)
+	return wrp
